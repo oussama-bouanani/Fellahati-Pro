@@ -1,0 +1,5 @@
+{
+  "score": 5,
+  "summary": "Les règles isolent strictement chaque utilisateur par UID, appliquent la même validation à la création et à la mise à jour, limitent les champs, types, tailles et valeurs numériques, et refusent tout autre chemin.",
+  "findings": []
+}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#145c3a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="فلاحتي" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <title>فلاحتي Pro</title>
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <section id="auth" class="auth-wrap">
+    <article class="auth-card">
+      <div class="logo">ف</div><p class="eyebrow">FELLAHATI PRO</p>
+      <h1>مرحبا بك في فلاحتي</h1><p>دخل أول مرة بالإنترنت، ومن بعد خدم بأمان حتى بلا شبكة.</p>
+      <form id="authForm"><label>البريد الإلكتروني<input id="email" type="email" autocomplete="email" required /></label><label>كلمة السر<input id="password" type="password" autocomplete="current-password" minlength="6" required /></label><button class="btn primary" type="submit">دخول</button></form>
+      <div class="auth-actions"><button id="register" class="btn subtle">إنشاء حساب</button><button id="google" class="btn google">G&nbsp; الدخول بـ Google</button><button id="reset" class="link">نسيت كلمة السر؟</button></div>
+      <p id="authMsg" class="error"></p><small>كلمة السر لا تُخزَّن في التطبيق. يلزم الإنترنت لتسجيل الدخول الأول.</small>
+    </article>
+  </section>
+  <div id="app" hidden>
+    <aside class="sidebar"><div class="brand"><div class="logo">ف</div><div><strong>فلاحتي</strong><small>FELLAHATI PRO</small></div></div><nav id="nav"><button data-page="dashboard" class="active">⌂ لوحة التحكم</button><button data-page="records">＋ إضافة عملية</button><button data-page="history">☷ السجل</button><button data-page="backup">⇩ النسخ الاحتياطي</button></nav><div class="side-foot"><button id="theme" class="nav-btn">◐ المظهر</button><button id="logout" class="nav-btn">↪ خروج</button></div></aside>
+    <main class="main"><header><div><p id="greeting" class="eyebrow">نهارك مبروك</p><h1 id="pageTitle">لوحة التحكم</h1></div><div class="top-actions"><span id="onlineBadge" class="badge"></span><button id="install" class="icon-btn" hidden>تثبيت</button><button id="sync" class="btn primary">↻ زامن دابا</button></div></header>
+      <section id="syncPanel" class="sync-panel"><div><b id="syncState">محفوظ محلياً</b><span id="syncDetail">جاري فحص البيانات…</span></div><div><strong id="pending">0</strong><small>عملية معلقة</small></div><div><strong id="lastSync">—</strong><small>آخر مزامنة ناجحة</small></div></section>
+      <section id="dashboardPage" class="page active"><div id="stats" class="stats"></div><div class="grid-2"><article class="card"><div class="card-head"><div><p class="eyebrow">النشاط</p><h2>المداخيل والمصاريف الشهرية</h2></div></div><canvas id="chart" height="160"></canvas></article><article class="card"><div class="card-head"><div><p class="eyebrow">المحاصيل</p><h2>اختيار سريع</h2></div></div><div id="cropGallery" class="crop-gallery"></div></article></div><article class="card"><div class="card-head"><h2>نظرة على الأراضي والمحاصيل</h2><button data-go="records" class="link">إضافة عملية</button></div><div id="summaryTable" class="table-wrap"></div></article></section>
+      <section id="recordsPage" class="page"><article class="card"><div class="card-head"><div><p class="eyebrow">إدخال سريع</p><h2>سجّل عملية فلاحية</h2></div></div><form id="recordForm"><div class="type-tabs" id="typeTabs"><button type="button" data-kind="land" class="active">أرض</button><button type="button" data-kind="crop">زراعة</button><button type="button" data-kind="harvest">حصاد</button><button type="button" data-kind="sale">بيع</button><button type="button" data-kind="expense">مصروف</button></div><input type="hidden" id="kind" value="land" /><div class="fields"><label>اسم الأرض<input id="landName" maxlength="100" required placeholder="مثلاً: أرض الزيتون" /></label><label>المحصول<select id="cropName"></select></label><label>التاريخ<input id="date" type="date" required /></label><label data-field="area">المساحة<input id="area" type="number" min="0" step="0.01" /></label><label data-field="area">الوحدة<select id="areaUnit"><option value="ha">هكتار</option><option value="m2">م²</option></select></label><label data-field="quantity">الكمية<input id="quantity" type="number" min="0" step="0.01" /></label><label data-field="quantity">الوحدة<select id="quantityUnit"><option value="kg">kg</option><option value="t">طن</option></select></label><label data-field="price">ثمن الكيلو (درهم)<input id="unitPrice" type="number" min="0" step="0.01" /></label><label data-field="expense">الصنف<select id="category"><option>بذور</option><option>أسمدة</option><option>مبيدات</option><option>سقي</option><option>يد عاملة</option><option>وقود</option><option>نقل</option><option>معدات</option><option>أخرى</option></select></label><label data-field="expense">المبلغ (درهم)<input id="amount" type="number" min="0" step="0.01" /></label><label>الموسم<input id="season" maxlength="40" placeholder="2026/2027" /></label><label class="wide">ملاحظات<textarea id="notes" maxlength="1000"></textarea></label><label class="wide">صورة مخصصة<input id="photo" type="file" accept="image/*" /></label></div><div id="cropPreview" class="crop-preview"></div><button class="btn primary" type="submit">حفظ العملية</button></form></article></section>
+      <section id="historyPage" class="page"><article class="card"><div class="card-head"><h2>سجل العمليات</h2><div class="filters"><select id="filterKind"><option value="">الكل</option><option value="land">أرض</option><option value="crop">زراعة</option><option value="harvest">حصاد</option><option value="sale">بيع</option><option value="expense">مصروف</option></select><input id="search" placeholder="بحث…" /></div></div><div id="history"></div></article></section>
+      <section id="backupPage" class="page"><article class="card"><h2>النسخ الاحتياطي</h2><p>صدّر نسخة JSON كاملة أو CSV للتحليل. الاستيراد يدمج السجلات باستعمال معرفاتها الفريدة.</p><div class="button-row"><button id="exportJson" class="btn primary">تحميل JSON</button><button id="exportCsv" class="btn subtle">تحميل CSV</button><label class="btn subtle file">استيراد JSON<input id="importJson" type="file" accept=".json,application/json" hidden /></label></div></article><article class="card danger-zone"><h2>ملاحظات الأمان</h2><p>استعمل قفل الهاتف ولا تمسح بيانات المتصفح قبل المزامنة أو أخذ نسخة احتياطية. لا توجد مزامنة دائمة مضمونة في خلفية iPhone؛ تتم المزامنة عند فتح التطبيق أو استئنافه.</p></article></section>
+    </main>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body></html>

@@ -1,0 +1,3 @@
+import {db,queued,clearQueue,mergeRemote} from './db.js';
+import {configured,firestore,collection,doc,setDoc,getDocs} from './firebase.js';
+export async function syncNow(uid,onStatus=()=>{}){if(!navigator.onLine)throw new Error('offline');if(!configured||!firestore)throw new Error('not-configured');onStatus('syncing');const q=await queued(uid);const col=collection(firestore,'users',uid,'records');for(const item of q){await setDoc(doc(col,item.id),item.value);await clearQueue(item.key);}const snaps=await getDocs(col);for(const snap of snaps.docs)await mergeRemote(uid,snap.data());await db.meta.put({key:`lastSync:${uid}`,value:Date.now()});onStatus('synced');return snaps.size;}

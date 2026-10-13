@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedInAs(userId) { return request.auth != null && request.auth.uid == userId; }
+    function validRecord() {
+      return request.resource.data.keys().hasOnly([
+        'id','kind','cropId','cropName','landId','landName','date','area','areaUnit',
+        'quantity','quantityUnit','soldQuantity','unitPrice','amount','category','buyer',
+        'season','plantedAt','seedQuantity','notes','photo','updatedAt','deviceId','deleted'
+      ])
+      && request.resource.data.id is string && request.resource.data.id.size() >= 8 && request.resource.data.id.size() <= 128
+      && request.resource.data.kind in ['land','crop','harvest','sale','expense']
+      && request.resource.data.date is string && request.resource.data.date.size() == 10
+      && request.resource.data.cropName is string && request.resource.data.cropName.size() <= 100
+      && request.resource.data.landName is string && request.resource.data.landName.size() <= 100
+      && request.resource.data.notes is string && request.resource.data.notes.size() <= 1000
+      && request.resource.data.cropId is string && request.resource.data.cropId.size() <= 100
+      && request.resource.data.landId is string && request.resource.data.landId.size() <= 128
+      && request.resource.data.areaUnit is string && request.resource.data.areaUnit in ['ha','m2']
+      && request.resource.data.quantityUnit is string && request.resource.data.quantityUnit in ['kg','t']
+      && request.resource.data.category is string && request.resource.data.category.size() <= 80
+      && request.resource.data.buyer is string && request.resource.data.buyer.size() <= 120
+      && request.resource.data.season is string && request.resource.data.season.size() <= 40
+      && request.resource.data.plantedAt is string && request.resource.data.plantedAt.size() <= 10
+      && request.resource.data.photo is string && request.resource.data.photo.size() <= 700000
+      && request.resource.data.deviceId is string && request.resource.data.deviceId.size() <= 128
+      && request.resource.data.area is number && request.resource.data.area >= 0 && request.resource.data.area <= 1000000000
+      && request.resource.data.quantity is number && request.resource.data.quantity >= 0 && request.resource.data.quantity <= 1000000000
+      && request.resource.data.unitPrice is number && request.resource.data.unitPrice >= 0 && request.resource.data.unitPrice <= 1000000000
+      && request.resource.data.soldQuantity is number && request.resource.data.soldQuantity >= 0 && request.resource.data.soldQuantity <= 1000000000
+      && request.resource.data.seedQuantity is number && request.resource.data.seedQuantity >= 0 && request.resource.data.seedQuantity <= 1000000000
+      && request.resource.data.amount is number && request.resource.data.amount >= 0 && request.resource.data.amount <= 100000000000
+      && request.resource.data.updatedAt is int && request.resource.data.updatedAt > 0
+      && request.resource.data.deleted is bool;
+    }
+    match /users/{userId}/records/{recordId} {
+      allow read, delete: if signedInAs(userId);
+      allow create, update: if signedInAs(userId) && validRecord()
+        && request.resource.data.id == recordId;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}
