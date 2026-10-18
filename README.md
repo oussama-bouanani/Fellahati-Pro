@@ -2,6 +2,10 @@
 
 تطبيق فلاحي احترافي PWA بالعربية المغربية، يعمل محلياً بـ IndexedDB ثم يزامن مع Firebase بعد تأكيد الخادم.
 
+التطبيق المنشور: https://fellahati-pro-bouanani-2026.web.app
+
+مشروع Firebase: `fellahati-pro-bouanani-2026` — خطة Spark المجانية.
+
 ## التشغيل المحلي
 
 ```bash
@@ -14,10 +18,11 @@ pnpm dev
 
 ## إعداد Firebase
 
-1. فعّل Email/Password وGoogle في Firebase Authentication.
-2. أنشئ Firestore وانشر `firestore.rules`.
-3. أضف نطاق الاستضافة إلى Authorized domains.
-4. ابنِ وانشر: `pnpm build` ثم `pnpm exec firebase deploy --only firestore:rules,hosting`.
+المشروع الحالي مهيأ بـ Firebase Authentication وCloud Firestore في `europe-west1` وFirebase Hosting. لإعادة النشر:
+
+1. أنشئ `.env.local` من `.env.example` وأدخل إعدادات تطبيق Firebase Web.
+2. شغّل `pnpm test` ثم `pnpm build`.
+3. انشر بواسطة `pnpm exec firebase deploy --only firestore:rules,firestore:indexes,hosting`.
 
 ## العمل بلا إنترنت
 
@@ -35,3 +40,9 @@ pnpm dev
 - `pnpm test:rules`: عزل بيانات المستخدمين والتحقق من السجلات عبر Firestore Emulator.
 
 راجع [دليل المستخدم](docs/GUIDE_AR.md) و[تقرير الاختبارات](docs/TEST_REPORT.md).
+
+## الروابط
+
+- GitHub: https://github.com/oussama-bouanani/Fellahati-Pro
+- Firebase Console: https://console.firebase.google.com/project/fellahati-pro-bouanani-2026/overview
+- التطبيق: https://fellahati-pro-bouanani-2026.web.app
