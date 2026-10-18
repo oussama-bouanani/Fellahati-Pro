@@ -32,7 +32,10 @@ pnpm dev
 
 - Android: افتح رابط HTTPS في Chrome ثم «تثبيت التطبيق».
 - iPhone: افتح الرابط في Safari ثم مشاركة ← «إضافة إلى الشاشة الرئيسية».
-- Capacitor: بعد `pnpm build` شغّل `pnpm exec cap add android` أو `pnpm exec cap add ios` على macOS/Xcode، ثم `pnpm exec cap sync`. لم يُنتج APK أو IPA في هذا المستودع.
+- Capacitor: مشروعا Android وiOS موجودان في `android/` و`ios/` ومعرّف الحزمة هو `ma.fellahati.pro`. بعد كل بناء ويب شغّل `pnpm exec cap sync`.
+- Android: يتطلب Android Studio/JDK ثم إنشاء مفتاح توقيع وبناء AAB موقّع للنشر في Google Play.
+- iOS: يتطلب macOS وXcode وحساب Apple Developer للتوقيع وبناء IPA ورفعه إلى App Store Connect.
+- لم يُنتج AAB أو IPA موقّع قبل توفر أدوات التوقيع وحسابات المتاجر.
 
 ## الاختبارات
 

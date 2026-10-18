@@ -11,7 +11,9 @@
     "test:rules": "firebase emulators:exec --only firestore \"vitest run tests/firestore.rules.test.js\""
   },
   "dependencies": {
+    "@capacitor/android": "7.6.9",
     "@capacitor/core": "^7.4.3",
+    "@capacitor/ios": "7.6.9",
     "chart.js": "^4.4.7",
     "dexie": "^4.0.11",
     "firebase": "^11.10.0"

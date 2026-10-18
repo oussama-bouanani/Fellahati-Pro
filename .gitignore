@@ -6,5 +6,3 @@ firebase-debug.log*
 .env*
 !.env.example
 coverage/
-android/
-ios/

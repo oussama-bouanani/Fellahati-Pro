@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "866928435709",
+    "project_id": "fellahati-pro-bouanani-2026",
+    "storage_bucket": "fellahati-pro-bouanani-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866928435709:android:98a6a6f469d9526930f994",
+        "android_client_info": {
+          "package_name": "ma.fellahati.pro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM6ZxjhLoT6Jvh4a_ZX3llYdiC5pH1yXc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
