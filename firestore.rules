@@ -1,41 +1,87 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedInAs(userId) { return request.auth != null && request.auth.uid == userId; }
-    function validRecord() {
-      return request.resource.data.keys().hasOnly([
+    // Assumed model: users/{userId}/records/{recordId} is a private farm record.
+    // Core fields are required. Optional plot fields are locationLabel,
+    // latitude, longitude, and the strictly validated treeCounts map.
+    function isAuthenticated() { return request.auth != null; }
+    function isOwner(userId) { return isAuthenticated() && request.auth.uid == userId; }
+    function uidUnchanged(data) { return !('uid' in data) || data.uid == request.auth.uid; }
+    function uidNotModified(data) { return !('uid' in data) || data.uid == resource.data.uid; }
+
+    function validTreeCount(treeCounts, key) {
+      return !(key in treeCounts) ||
+        (treeCounts[key] is int && treeCounts[key] >= 0 && treeCounts[key] <= 1000000);
+    }
+    function validTreeCounts(data) {
+      return !('treeCounts' in data) ||
+        (data.treeCounts is map
+        && data.treeCounts.keys().hasOnly([
+          'olivier','grenadier','figuier','citronnier','oranger','amandier','pommier','vigne'
+        ])
+        && validTreeCount(data.treeCounts, 'olivier')
+        && validTreeCount(data.treeCounts, 'grenadier')
+        && validTreeCount(data.treeCounts, 'figuier')
+        && validTreeCount(data.treeCounts, 'citronnier')
+        && validTreeCount(data.treeCounts, 'oranger')
+        && validTreeCount(data.treeCounts, 'amandier')
+        && validTreeCount(data.treeCounts, 'pommier')
+        && validTreeCount(data.treeCounts, 'vigne'));
+    }
+    function validLocation(data) {
+      return (!('locationLabel' in data) ||
+          (data.locationLabel is string && data.locationLabel.size() <= 160))
+        && (!('latitude' in data) ||
+          (data.latitude is number && data.latitude >= -90 && data.latitude <= 90))
+        && (!('longitude' in data) ||
+          (data.longitude is number && data.longitude >= -180 && data.longitude <= 180));
+    }
+    function isValidRecord(data) {
+      return data.keys().hasOnly([
+        'id','kind','cropId','cropName','landId','landName','date','area','areaUnit',
+        'quantity','quantityUnit','soldQuantity','unitPrice','amount','category','buyer',
+        'season','plantedAt','seedQuantity','notes','photo','locationLabel','latitude',
+        'longitude','treeCounts','updatedAt','deviceId','deleted'
+      ])
+      && data.keys().hasAll([
         'id','kind','cropId','cropName','landId','landName','date','area','areaUnit',
         'quantity','quantityUnit','soldQuantity','unitPrice','amount','category','buyer',
         'season','plantedAt','seedQuantity','notes','photo','updatedAt','deviceId','deleted'
       ])
-      && request.resource.data.id is string && request.resource.data.id.size() >= 8 && request.resource.data.id.size() <= 128
-      && request.resource.data.kind in ['land','crop','harvest','sale','expense']
-      && request.resource.data.date is string && request.resource.data.date.size() == 10
-      && request.resource.data.cropName is string && request.resource.data.cropName.size() <= 100
-      && request.resource.data.landName is string && request.resource.data.landName.size() <= 100
-      && request.resource.data.notes is string && request.resource.data.notes.size() <= 1000
-      && request.resource.data.cropId is string && request.resource.data.cropId.size() <= 100
-      && request.resource.data.landId is string && request.resource.data.landId.size() <= 128
-      && request.resource.data.areaUnit is string && request.resource.data.areaUnit in ['ha','m2']
-      && request.resource.data.quantityUnit is string && request.resource.data.quantityUnit in ['kg','t']
-      && request.resource.data.category is string && request.resource.data.category.size() <= 80
-      && request.resource.data.buyer is string && request.resource.data.buyer.size() <= 120
-      && request.resource.data.season is string && request.resource.data.season.size() <= 40
-      && request.resource.data.plantedAt is string && request.resource.data.plantedAt.size() <= 10
-      && request.resource.data.photo is string && request.resource.data.photo.size() <= 700000
-      && request.resource.data.deviceId is string && request.resource.data.deviceId.size() <= 128
-      && request.resource.data.area is number && request.resource.data.area >= 0 && request.resource.data.area <= 1000000000
-      && request.resource.data.quantity is number && request.resource.data.quantity >= 0 && request.resource.data.quantity <= 1000000000
-      && request.resource.data.unitPrice is number && request.resource.data.unitPrice >= 0 && request.resource.data.unitPrice <= 1000000000
-      && request.resource.data.soldQuantity is number && request.resource.data.soldQuantity >= 0 && request.resource.data.soldQuantity <= 1000000000
-      && request.resource.data.seedQuantity is number && request.resource.data.seedQuantity >= 0 && request.resource.data.seedQuantity <= 1000000000
-      && request.resource.data.amount is number && request.resource.data.amount >= 0 && request.resource.data.amount <= 100000000000
-      && request.resource.data.updatedAt is int && request.resource.data.updatedAt > 0
-      && request.resource.data.deleted is bool;
+      && data.id is string && data.id.size() >= 8 && data.id.size() <= 128
+      && data.kind in ['land','crop','harvest','sale','expense']
+      && data.date is string && data.date.size() == 10
+      && data.cropName is string && data.cropName.size() <= 100
+      && data.landName is string && data.landName.size() <= 100
+      && data.notes is string && data.notes.size() <= 1000
+      && data.cropId is string && data.cropId.size() <= 100
+      && data.landId is string && data.landId.size() <= 128
+      && data.areaUnit is string && data.areaUnit in ['ha','m2']
+      && data.quantityUnit is string && data.quantityUnit in ['kg','t']
+      && data.category is string && data.category.size() <= 80
+      && data.buyer is string && data.buyer.size() <= 120
+      && data.season is string && data.season.size() <= 40
+      && data.plantedAt is string && data.plantedAt.size() <= 10
+      && data.photo is string && data.photo.size() <= 700000
+      && data.deviceId is string && data.deviceId.size() <= 128
+      && data.area is number && data.area >= 0 && data.area <= 1000000000
+      && data.quantity is number && data.quantity >= 0 && data.quantity <= 1000000000
+      && data.unitPrice is number && data.unitPrice >= 0 && data.unitPrice <= 1000000000
+      && data.soldQuantity is number && data.soldQuantity >= 0 && data.soldQuantity <= 1000000000
+      && data.seedQuantity is number && data.seedQuantity >= 0 && data.seedQuantity <= 1000000000
+      && data.amount is number && data.amount >= 0 && data.amount <= 100000000000
+      && data.updatedAt is int && data.updatedAt > 0
+      && data.deleted is bool
+      && uidUnchanged(data)
+      && validLocation(data)
+      && validTreeCounts(data);
     }
     match /users/{userId}/records/{recordId} {
-      allow read, delete: if signedInAs(userId);
-      allow create, update: if signedInAs(userId) && validRecord()
+      allow read, delete: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidRecord(request.resource.data)
+        && request.resource.data.id == recordId;
+      allow update: if isOwner(userId) && isValidRecord(request.resource.data)
+        && uidNotModified(request.resource.data)
         && request.resource.data.id == recordId;
     }
     match /{document=**} { allow read, write: if false; }
