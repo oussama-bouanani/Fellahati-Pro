@@ -17,7 +17,11 @@ service cloud.firestore {
       return !('treeCounts' in data) ||
         (data.treeCounts is map
         && data.treeCounts.keys().hasOnly([
-          'olivier','grenadier','figuier','citronnier','oranger','amandier','pommier','vigne'
+          'olivier','grenadier','figuier','citronnier','oranger','amandier','pommier','vigne',
+          'dattier','arganier','clementinier','mandarinier','pamplemoussier','limettier',
+          'pecher','nectarinier','abricotier','prunier','cerisier','poirier','cognassier',
+          'noyer','noisetier','pistachier','caroubier','avocatier','manguier','bananier',
+          'murier','neflier','kakier','cocotier','goyavier','papayer','kiwi','autre-arbre'
         ])
         && validTreeCount(data.treeCounts, 'olivier')
         && validTreeCount(data.treeCounts, 'grenadier')
@@ -26,7 +30,35 @@ service cloud.firestore {
         && validTreeCount(data.treeCounts, 'oranger')
         && validTreeCount(data.treeCounts, 'amandier')
         && validTreeCount(data.treeCounts, 'pommier')
-        && validTreeCount(data.treeCounts, 'vigne'));
+        && validTreeCount(data.treeCounts, 'vigne')
+        && validTreeCount(data.treeCounts, 'dattier')
+        && validTreeCount(data.treeCounts, 'arganier')
+        && validTreeCount(data.treeCounts, 'clementinier')
+        && validTreeCount(data.treeCounts, 'mandarinier')
+        && validTreeCount(data.treeCounts, 'pamplemoussier')
+        && validTreeCount(data.treeCounts, 'limettier')
+        && validTreeCount(data.treeCounts, 'pecher')
+        && validTreeCount(data.treeCounts, 'nectarinier')
+        && validTreeCount(data.treeCounts, 'abricotier')
+        && validTreeCount(data.treeCounts, 'prunier')
+        && validTreeCount(data.treeCounts, 'cerisier')
+        && validTreeCount(data.treeCounts, 'poirier')
+        && validTreeCount(data.treeCounts, 'cognassier')
+        && validTreeCount(data.treeCounts, 'noyer')
+        && validTreeCount(data.treeCounts, 'noisetier')
+        && validTreeCount(data.treeCounts, 'pistachier')
+        && validTreeCount(data.treeCounts, 'caroubier')
+        && validTreeCount(data.treeCounts, 'avocatier')
+        && validTreeCount(data.treeCounts, 'manguier')
+        && validTreeCount(data.treeCounts, 'bananier')
+        && validTreeCount(data.treeCounts, 'murier')
+        && validTreeCount(data.treeCounts, 'neflier')
+        && validTreeCount(data.treeCounts, 'kakier')
+        && validTreeCount(data.treeCounts, 'cocotier')
+        && validTreeCount(data.treeCounts, 'goyavier')
+        && validTreeCount(data.treeCounts, 'papayer')
+        && validTreeCount(data.treeCounts, 'kiwi')
+        && validTreeCount(data.treeCounts, 'autre-arbre'));
     }
     function validLocation(data) {
       return (!('locationLabel' in data) ||

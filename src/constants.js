@@ -13,13 +13,43 @@ export const CROPS=[
   ['amandier','اللوز','https://commons.wikimedia.org/wiki/Special:FilePath/Almonds.jpg?width=640'],
   ['pommier','التفاح','https://commons.wikimedia.org/wiki/Special:FilePath/Apples.jpg?width=640'],
   ['vigne','العنب','https://commons.wikimedia.org/wiki/Special:FilePath/Grapes.jpg?width=640'],
+  ['dattier','نخيل التمر',''],
+  ['arganier','الأركان',''],
+  ['clementinier','الكليمانتين',''],
+  ['mandarinier','المندرين',''],
+  ['pamplemoussier','البامبلوموس',''],
+  ['limettier','الليمون الأخضر',''],
+  ['pecher','الخوخ',''],
+  ['nectarinier','النكتارين',''],
+  ['abricotier','المشمش',''],
+  ['prunier','البرقوق',''],
+  ['cerisier','الكرز',''],
+  ['poirier','الإجاص',''],
+  ['cognassier','السفرجل',''],
+  ['noyer','الجوز',''],
+  ['noisetier','البندق',''],
+  ['pistachier','الفستق',''],
+  ['caroubier','الخروب',''],
+  ['avocatier','الأفوكادو',''],
+  ['manguier','المانجا',''],
+  ['bananier','الموز',''],
+  ['murier','التوت',''],
+  ['neflier','المزاح / النبق',''],
+  ['kakier','الكاكي',''],
+  ['cocotier','جوز الهند',''],
+  ['goyavier','الجوافة',''],
+  ['papayer','البابايا',''],
+  ['kiwi','الكيوي',''],
+  ['autre-arbre','أشجار أخرى',''],
   ['mais','الذرة','https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=640&q=80'],
   ['pasteque','الدلاح','https://images.unsplash.com/photo-1563114773-84221bd62daa?auto=format&fit=crop&w=640&q=80'],
   ['poivron','الفلفلة','https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=640&q=80'],
   ['haricot','اللوبيا','https://images.unsplash.com/photo-1551462147-ff29053bfc14?auto=format&fit=crop&w=640&q=80'],
   ['autre','محصول آخر','']
 ];
-export const TREE_CROPS=CROPS.filter(([id])=>['olivier','grenadier','figuier','citronnier','oranger','amandier','pommier','vigne'].includes(id));
+const TREE_IDS=['olivier','grenadier','figuier','citronnier','oranger','amandier','pommier','vigne','dattier','arganier','clementinier','mandarinier','pamplemoussier','limettier','pecher','nectarinier','abricotier','prunier','cerisier','poirier','cognassier','noyer','noisetier','pistachier','caroubier','avocatier','manguier','bananier','murier','neflier','kakier','cocotier','goyavier','papayer','kiwi','autre-arbre'];
+const TREE_EMOJI={olivier:'🫒',grenadier:'🔴',figuier:'🟣',citronnier:'🍋',oranger:'🍊',amandier:'🌰',pommier:'🍎',vigne:'🍇',dattier:'🌴',arganier:'🌳',clementinier:'🍊',mandarinier:'🍊',pamplemoussier:'🍊',limettier:'🍋',pecher:'🍑',nectarinier:'🍑',abricotier:'🟠',prunier:'🟣',cerisier:'🍒',poirier:'🍐',cognassier:'🟡',noyer:'🌰',noisetier:'🌰',pistachier:'🌰',caroubier:'🫘',avocatier:'🥑',manguier:'🥭',bananier:'🍌',murier:'🫐',neflier:'🟠',kakier:'🟠',cocotier:'🥥',goyavier:'🟢',papayer:'🟠',kiwi:'🥝','autre-arbre':'🌳'};
+export const TREE_CROPS=CROPS.filter(([id])=>TREE_IDS.includes(id)).map(c=>[...c,TREE_EMOJI[c[0]]||'🌳']);
 export const KIND_LABEL={land:'أرض',crop:'زراعة',harvest:'حصاد',sale:'بيع',expense:'مصروف'};
 export const toKg=(q,u)=>Number(q||0)*(u==='t'?1000:1);
 export function totals(rows){return rows.reduce((a,r)=>{if(!r.deleted){if(r.kind==='land'){a.lands++;a.trees+=Object.values(r.treeCounts||{}).reduce((n,v)=>n+Number(v||0),0)}if(r.kind==='crop')a.crops++;if(r.kind==='harvest')a.harvest+=toKg(r.quantity,r.quantityUnit);if(r.kind==='sale'){a.sold+=toKg(r.quantity,r.quantityUnit);a.sales+=Number(r.amount||0)}if(r.kind==='expense')a.expenses+=Number(r.amount||0)}return a},{lands:0,crops:0,trees:0,harvest:0,sold:0,sales:0,expenses:0});}
